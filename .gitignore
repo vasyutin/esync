@@ -1,0 +1,10 @@
+__pycache__
+.vscode
+bin
+build
+dist
+lib
+Lib
+Scripts
+esync.spec
+pyvenv.cfg
