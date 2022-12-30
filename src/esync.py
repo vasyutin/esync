@@ -56,13 +56,13 @@ def ModificationTime(Folder_):
 		print("Directory '{}' is empty (has no files).".format(Folder_))
 	else:
 		print('Modification time is ' + (datetime.datetime.fromtimestamp(g_MinFolderTime)).strftime('%Y-%m-%d %H:%M:%S') + '.')
-	return True
+	return 0
 
 # -----------------------------------------------------------------------------
 if __name__ != '__main__':
     sys.exit(1)
 
-ArgParser = argparse.ArgumentParser(description='ESync 1.2. Synchronizes directories (see https://github.com/vasyutin/esync).')
+ArgParser = argparse.ArgumentParser(description='ESync 1.3. Synchronizes directories (see https://github.com/vasyutin/esync).')
 ArgParser.add_argument('-s', '--source', type = str, help = 'Source directory.', dest = 'source')
 ArgParser.add_argument('-d', '--destination', type = str, help = 'Destination directory.', dest = 'destination')
 ArgParser.add_argument('-v', '--verbose', action='store_true', help = "Print actions' information.", default = False, \
@@ -76,7 +76,7 @@ ArgParser.add_argument('-f', '--fat', action='store_true', \
 	help = 'Round time to 2 seconds so program can synchronize normally files on FAT/FAT32/ExFAT.', default = False, \
 	dest='fat')
 ArgParser.add_argument('-t', '--time', action='store_true', \
-	help = 'The time when the files in the source folder were last modified. Use it with -s (--source) option.', default = False, \
+	help = 'Print the time when the files in the source folder were last modified. Use it with -s (--source) option.', default = False, \
 	dest='time')
 
 Arguments = ArgParser.parse_args()
