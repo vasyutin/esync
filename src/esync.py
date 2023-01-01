@@ -75,26 +75,23 @@ ArgParser.add_argument('-w', '--warn', action='store_true', \
 ArgParser.add_argument('-f', '--fat', action='store_true', \
 	help = 'Round time to 2 seconds so program can synchronize normally files on FAT/FAT32/ExFAT.', default = False, \
 	dest='fat')
-ArgParser.add_argument('-t', '--time', action='store_true', \
-	help = 'Print the time when the files in the source folder were last modified. Use it with -s (--source) option.', default = False, \
-	dest='time')
+ArgParser.add_argument('-m', '--modified', type = str, help = 'Print the time when the files in the given folder were last modified.', dest = 'modified')
 
 Arguments = ArgParser.parse_args()
 
 Verbose = True if Arguments.dry else Arguments.verbose
 g_FatMode = Arguments.fat
 
-if Arguments.time:
-	if Arguments.source == None:
-		print('Error! No source directory is specified for modification time analysis.', file = sys.stderr)
+if Arguments.modified:
+	if Arguments.source != None:
+		print("Error! The source directory option (-s/--source) can't be used with -m (--modified) option.", file = sys.stderr)
 		ArgParser.print_help()
 		sys.exit(1)
 	if Arguments.destination != None:
-		print("Error! The destination directory option (-d/--destination) can't be used with modification time check option (-t/--time).", \
-			file = sys.stderr)
+		print("Error! destination directory option (-d/--destination) can't be used with -m (--modified) option.", file = sys.stderr)
 		ArgParser.print_help()
 		sys.exit(1)
-	sys.exit(ModificationTime(Arguments.source))
+	sys.exit(ModificationTime(Arguments.modified))
 
 if Arguments.source == None or Arguments.destination == None:
 	print('Error! No source and/or destination directory is specified.', file = sys.stderr)
