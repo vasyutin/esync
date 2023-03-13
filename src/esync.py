@@ -5,6 +5,7 @@ import os
 import bisect
 import shutil
 from stat import S_ISREG, S_ISDIR
+from time import sleep
 
 g_FatMode = None
 
@@ -176,8 +177,13 @@ if os.path.isdir(DestPath):
 				try:
 					os.remove(DestPath + FileName)
 				except:
-					print('ERROR deleting file ' + DestPath + FileName + '.', file = sys.stderr)
-					sys.exit(1)
+					# Make second attempt to delete file (helps sometimes with network FS)
+					sleep(0.01)
+					try:
+						os.remove(DestPath + FileName)
+					except:
+						print('ERROR deleting file ' + DestPath + FileName + '.', file = sys.stderr)
+						sys.exit(1)
 
 	DirsToDelete = []
 	for DirName in DestDirs:
