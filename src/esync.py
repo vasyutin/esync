@@ -70,9 +70,9 @@ ArgParser.add_argument('-v', '--verbose', action='store_true', help = "Print act
 	dest='verbose')
 ArgParser.add_argument('-r', '--dry-run', action='store_true', help = 'Show actions to be taken but do not perform sync.', \
 	default = False, dest='dry')
-ArgParser.add_argument('-w', '--warn', action='store_true', \
-	help = 'Warn and stop sync if some files in the destination directory are newer than the same files in the source directory.', default = True, \
-	dest='warn')
+ArgParser.add_argument('-o', '--overwrite-newer', action='store_true', \
+	help = 'Enables sync if some files in the destination directory are newer than the same files in the source directory.', default = False, \
+	dest='overwrite_newer')
 ArgParser.add_argument('-f', '--fat', action='store_true', \
 	help = 'Round time to 2 seconds so program can synchronize normally files on FAT/FAT32/ExFAT.', default = False, \
 	dest='fat')
@@ -147,7 +147,7 @@ if os.path.isdir(DestPath):
 #print(DestFiles)
 #print(DestDirs)
 
-if Arguments.warn and len(DestFiles):
+if not Arguments.overwrite_newer and len(DestFiles):
 	NewerFiles = []
 	for i in range(len(SourceFiles)):
 		FileName = SourceFiles[i][0]
@@ -159,8 +159,11 @@ if Arguments.warn and len(DestFiles):
 	if len(NewerFiles):
 		print('WARNING! Sync is not performed because these files in the destination directory are newer than the same files in the source directory:', \
 			file = sys.stderr)
+		Counter = 1
 		for FileName in NewerFiles:
-			print(DestPath + FileName)
+			print("\t" + str(Counter) + ") '" + DestPath + FileName + "' is newer than '" + SourcePath + FileName + "'")
+			Counter += 1
+		print("\nERROR! Sync is not performed. Use '-o' option to overwrite newer files.")
 		sys.exit(1)
 
 if os.path.isdir(DestPath):
