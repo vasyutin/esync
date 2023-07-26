@@ -148,23 +148,44 @@ if os.path.isdir(DestPath):
 #print(DestDirs)
 
 if not Arguments.overwrite_newer and len(DestFiles):
+	SrcLen = len(SourceFiles)
+	if SrcLen == 0:
+		print("WARNING! No files in source directory but the destination directory is not empty. Use '-o' option to sync and delete files from the destination directory.", \
+			file = sys.stderr)
+		sys.exit(1)
+
 	NewerFiles = []
-	for i in range(len(SourceFiles)):
+	SrcLastModification = 0
+	for i in range(SrcLen):
+		if SourceFiles[i][1] > SrcLastModification:
+			SrcLastModification = SourceFiles[i][1]
+
 		FileName = SourceFiles[i][0]
 		Pos = bisect.bisect_left(DestFiles, FileName, key=lambda x: x[0])
 		if Pos > (len(DestFiles) - 1) or DestFiles[Pos][0] != FileName:
 			continue
 		if SourceFiles[i][1] < DestFiles[Pos][1]:
 			NewerFiles.append(FileName)
+
 	if len(NewerFiles):
 		print('WARNING! Sync is not performed because these files in the destination directory are newer than the same files in the source directory:', \
 			file = sys.stderr)
 		Counter = 1
 		for FileName in NewerFiles:
-			print("\t" + str(Counter) + ") '" + DestPath + FileName + "' is newer than '" + SourcePath + FileName + "'")
+			print("\t" + str(Counter) + ") '" + DestPath + FileName + "' is newer than '" + SourcePath + FileName + "'", file = sys.stderr)
 			Counter += 1
-		print("\nERROR! Sync is not performed. Use '-o' option to overwrite newer files.")
+		print("\nERROR! Sync is not performed. Use '-o' option to overwrite newer files.", file = sys.stderr)
 		sys.exit(1)
+
+	DestLastModification = 0
+	for i in range(len(DestFiles)):
+		if DestFiles[i][1] > DestLastModification:
+			DestLastModification = DestFiles[i][1]
+
+	if DestLastModification > SrcLastModification:
+		print("\nERROR! Sync is not performed because there are files in the destination directory which are newer than the " +\
+			"newest file in the source directory. Use '-o' option to overwrite the destination directory.", file = sys.stderr)
+		exit(1)
 
 if os.path.isdir(DestPath):
 	# Delete files not present in the source directory, files older than files in the source directory, 
