@@ -185,7 +185,7 @@ if not Arguments.overwrite_newer and len(DestFiles):
 	if DestLastModification > SrcLastModification:
 		print("\nERROR! Sync is not performed because there are files in the destination directory which are newer than the " +\
 			"newest file in the source directory. Use '-o' option to overwrite the destination directory.", file = sys.stderr)
-		exit(1)
+		sys.exit(1)
 
 if os.path.isdir(DestPath):
 	# Delete files not present in the source directory, files older than files in the source directory, 
