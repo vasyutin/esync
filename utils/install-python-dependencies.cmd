@@ -10,4 +10,4 @@ if ERRORLEVEL 1 (
 	exit 1
 )
 
-%PIP% install -r requirements.win.txt
+%PIP% install -r requirements.txt

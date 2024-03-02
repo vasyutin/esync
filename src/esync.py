@@ -63,7 +63,7 @@ def ModificationTime(Folder_):
 if __name__ != '__main__':
     sys.exit(1)
 
-ArgParser = argparse.ArgumentParser(description='ESync 1.3. Synchronizes directories (see https://github.com/vasyutin/esync).')
+ArgParser = argparse.ArgumentParser(description='ESync 1.3.1 is a directory synchronization program (see https://github.com/vasyutin/esync).')
 ArgParser.add_argument('-s', '--source', type = str, help = 'Source directory.', dest = 'source')
 ArgParser.add_argument('-d', '--destination', type = str, help = 'Destination directory.', dest = 'destination')
 ArgParser.add_argument('-v', '--verbose', action='store_true', help = "Print actions' information.", default = False, \
@@ -150,8 +150,9 @@ if os.path.isdir(DestPath):
 if not Arguments.overwrite_newer and len(DestFiles):
 	SrcLen = len(SourceFiles)
 	if SrcLen == 0:
-		print("WARNING! No files in source directory but the destination directory is not empty. Use '-o' option to sync and delete files from the destination directory.", \
-			file = sys.stderr)
+		print("WARNING! No files in source directory but the destination directory is not empty. "
+		   "Use '-o' option to sync and delete files from the destination directory.",
+		   file = sys.stderr)
 		sys.exit(1)
 
 	NewerFiles = []
@@ -172,7 +173,7 @@ if not Arguments.overwrite_newer and len(DestFiles):
 			file = sys.stderr)
 		Counter = 1
 		for FileName in NewerFiles:
-			print("\t" + str(Counter) + ") '" + DestPath + FileName + "' is newer than '" + SourcePath + FileName + "'", file = sys.stderr)
+			print("   " + str(Counter) + ") '" + DestPath + FileName + "' is newer than '" + SourcePath + FileName + "'", file = sys.stderr)
 			Counter += 1
 		print("\nERROR! Sync is not performed. Use '-o' option to overwrite newer files.", file = sys.stderr)
 		sys.exit(1)
@@ -273,7 +274,7 @@ for i in range(len(SourceFiles)):
 				try:
 					os.utime(DestPath + FileName, (ModTime, ModTime))
 				except Exception as E_:
-					print('ERROR changing file\'s time ' + SourcePath + FileName + ': ' + str(E_), file = sys.stderr)
+					print('ERROR changing the timestamp of file ' + SourcePath + FileName + ': ' + str(E_), file = sys.stderr)
 					sys.exit(1)
 
 			else: # Fat mode
